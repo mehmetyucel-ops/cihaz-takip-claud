@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Güç Elektroniği Laboratuvarı</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preload" as="image" href="https://anova.com.tr/wp-content/uploads/2022/06/Anova_Logo_Beyaz_00.webp">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Güç Lab">
+  <meta name="theme-color" content="#212529">
+  <link rel="apple-touch-icon" href="https://anova.com.tr/wp-content/uploads/2022/06/Anova_Logo_Beyaz_00.webp">
+  <script>
+    const manifestJSON = { "name": "Güç Elektroniği Lab", "short_name": "Güç Lab", "start_url": window.location.href, "display": "standalone", "background_color": "#f4f5f7", "theme_color": "#212529", "icons": [{ "src": "https://anova.com.tr/wp-content/uploads/2022/06/Anova_Logo_Beyaz_00.webp", "sizes": "512x512", "type": "image/webp", "purpose": "any maskable" }] };
+    document.write('<link rel="manifest" href="data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifestJSON)) + '">');
+  </script>
+
+  <style>
+    body { background-color: #f4f5f7; font-family: 'Inter', sans-serif; letter-spacing: -0.2px; }
+    .header-box { background: linear-gradient(135deg, #343a40, #212529); color: white; padding: 15px 20px; border-bottom: 5px solid #f4c430; margin-bottom: 25px; border-radius: 0 0 15px 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .user-info { font-size: 0.85rem; background: rgba(255,255,255,0.1); padding: 6px 16px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.25); color: #f8f9fa; word-break: break-all; }
+    .btn-anova-yellow { background-color: #f4c430; color: #212529; border: none; font-weight: 600; }
+    .btn-anova-yellow:hover { background-color: #e3b324; transform: translateY(-2px); }
+    .btn-anova-dark { background-color: #343a40; color: #fff; }
+    
+    .card { border: 2px solid transparent; border-radius: 12px; cursor: pointer; transition: all 0.3s ease-in-out; background-color: #ffffff; box-shadow: 0 4px 20px rgba(244, 196, 48, 0.15); }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(33, 37, 41, 0.25); }
+    
+    .category-card { background-color: #ffffff; border-radius: 8px; cursor: pointer; transition: all 0.3s ease-in-out; padding: 20px 18px; border: 1px solid #f0f0f0; border-left: 4px solid #f4c430; height: 100%; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 20px rgba(244, 196, 48, 0.25); }
+    .category-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(33, 37, 41, 0.35); border-left-color: #212529; }
+    
+    .status-musait { background-color: #e8f5e9; color: #2e7d32; padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem;}
+    .status-kullanimda { background-color: #ffebee; color: #c62828; padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem;}
+    .status-arizali { background-color: #ffebee; color: #b71c1c; padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; border: 1px solid #ef9a9a;}
+    .status-kalibrasyonda { background-color: #fff3e0; color: #e65100; padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; border: 1px solid #ffcc80;}
+    .border-kullanimda { border-color: #ff9999; box-shadow: 0 0 8px rgba(220, 53, 69, 0.15); background-color: #fffafb; }
+    .border-kalibrasyonda-card { border-color: #ff9800; box-shadow: 0 0 10px rgba(255, 152, 0, 0.2); background-color: #fffaf6; }
+    .border-arizali-card { border-color: #b71c1c; box-shadow: 0 0 12px rgba(183, 28, 28, 0.25); background-color: #fff5f5; }
+    .border-planli-card { border-color: #6c757d; box-shadow: 0 0 8px rgba(108, 117, 125, 0.2); background-color: #f8f9fa; }
+    .doc-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.2s ease; }
+    .doc-btn-cal { background-color: #e8f0fe; color: #1155cc; border: 1px solid #c2d7fa; }
+    .doc-btn-ds { background-color: #f3e8fc; color: #673ab7; border: 1px solid #dfc2f4; }
+    .folder-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(244, 245, 247, 0.95); z-index: 1040; overflow-y: auto; padding: 30px 10px; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; backdrop-filter: blur(5px); }
+    .folder-overlay.show-folder { opacity: 1; pointer-events: auto; }
+    .admin-tab { position: relative; border-radius: 8px; font-weight: 600; padding: 8px 14px; font-size: 0.85rem; color: #495057; background-color: #fff; border: 1px solid #dee2e6; transition: all 0.2s ease; margin-bottom: 5px; white-space: nowrap; }
+    .admin-tab:hover { background-color: #f8f9fa; border-color: #ced4da; transform: translateY(-1px); }
+    .admin-tab.active { background-color: #343a40 !important; color: #fff !important; border-color: #343a40 !important; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+    .admin-tab.tab-warning.active { background-color: #f4c430 !important; color: #212529 !important; border-color: #f4c430 !important; }
+    .admin-tab.tab-danger.active { background-color: #dc3545 !important; color: #fff !important; border-color: #dc3545 !important; }
+    .form-label-custom { font-size: 0.75rem; font-weight: 700; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .form-control-custom { background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 10px 15px; font-size: 0.95rem; transition: all 0.2s; }
+    .form-control-custom:focus { background-color: #fff; border-color: #f4c430; box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.2); outline: none; }
+    .admin-content-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+    .admin-content-box .table th, .admin-content-box .table td { white-space: nowrap; vertical-align: middle; }
+    @media (max-width: 768px) {
+      .header-box { flex-direction: column !important; text-align: center !important; gap: 12px; border-radius: 0 0 20px 20px; padding-bottom: 20px; }
+      .header-box .text-end { text-align: center !important; }
+      .header-box img { height: 50px !important; }
+      .modal-dialog-responsive { max-width: 96% !important; margin: 10px auto !important; }
+      .admin-content-box { padding: 12px !important; }
+      #btnCol { flex-wrap: nowrap !important; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; padding-bottom: 5px; justify-content: flex-start !important; -ms-overflow-style: none; scrollbar-width: none; }
+      #btnCol::-webkit-scrollbar { display: none; }
+      #btnCol .btn { white-space: nowrap; flex: 0 0 auto; }
+      #adminTabs { flex-wrap: nowrap !important; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; padding-bottom: 8px; margin-bottom: 15px !important; }
+      #adminTabs::-webkit-scrollbar { height: 4px; }
+      #adminTabs::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 4px; }
+      .admin-content-box .table-responsive table { min-width: 650px; }
+      .table th, .table td { font-size: 0.85rem !important; }
+    }
+    .fade-in-up { animation: fadeInUp 0.4s ease forwards; opacity: 0; transform: translateY(15px); }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+    .toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 1070; display: flex; flex-direction: column; gap: 15px; pointer-events: none; }
+    .custom-toast { background: #212529; color: #fff; padding: 16px 24px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 12px; opacity: 0; transform: translateX(100%); animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; font-weight: 500; font-size: 0.95rem; }
+    .custom-toast.error { border-left: 5px solid #dc3545; }
+    .custom-toast.success { border-left: 5px solid #20c997; }
+    .custom-toast.fade-out { animation: fadeOutRight 0.4s ease forwards; }
+    @keyframes slideInRight { to { opacity: 1; transform: translateX(0); } }
+    @keyframes fadeOutRight { to { opacity: 0; transform: translateX(100%); } }
+  </style>
+</head>
+<body>
+
+<div class="header-box d-flex justify-content-between align-items-center">
+  <a href="https://script.google.com/a/macros/anova.com.tr/s/AKfycby2ui25iVsMBrAZ0MTpzsDswjRyPJv8K8xbCbZLMa9dkzSvcb9CK7IL1GUcDE27OJAo6Q/exec" target="_top">
+    <img src="https://anova.com.tr/wp-content/uploads/2022/06/Anova_Logo_Beyaz_00.webp" alt="Logo" style="height: 65px; cursor: pointer; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3));" title="Ana Sayfaya Dön">
+  </a>
+  <div class="text-end">
+    <div class="fw-bold mb-1" style="color:#e9ecef; font-size: 1.1rem; letter-spacing: 0.5px;">Güç Elektroniği Laboratuvarı</div>
+    <div class="user-info d-inline-block shadow-sm">Oturum: <span id="activeUserEmail" class="text-warning fw-bold"><?= userEmail ?></span></div>
+  </div>
+</div>
+
+<div id="mainAppArea" class="d-block">
+    <div class="container">
+      <div class="row g-3 align-items-center mb-4 mt-2">
+        <div id="searchCol" class="col-12 col-md flex-grow-1">
+          <input type="text" id="searchInput" class="form-control bg-white border-0 py-3 shadow-sm w-100" placeholder="Cihaz arayın..." onkeyup="performLocalSearch()" style="border-radius: 12px; font-weight: 500;">
+        </div>
+        <div id="btnCol" class="col-12 col-md-auto d-flex flex-wrap gap-2 justify-content-center flex-nowrap-mobile">
+          <a href="https://script.google.com/a/macros/anova.com.tr/s/AKfycby2ui25iVsMBrAZ0MTpzsDswjRyPJv8K8xbCbZLMa9dkzSvcb9CK7IL1GUcDE27OJAo6Q/exec" target="_top" class="btn btn-light fw-bold shadow-sm d-flex align-items-center justify-content-center px-3" style="border-radius: 10px; border: 1px solid #ced4da;" title="Ana Sayfaya Dön">
+            <i class="bi bi-house-door-fill"></i>
+          </a>
+          <button id="btnMyDevices" class="btn fw-bold shadow-sm px-3 px-lg-4" style="background-color: #6c757d; color: white; border: none; border-radius: 10px; padding-top: 12px; padding-bottom: 12px;" onclick="openMyDevicesModal()"><i class="bi bi-journal-bookmark-fill me-1"></i> Cihazlarım</button>
+          <button id="btnOpenBulkModal" class="btn btn-anova-yellow fw-bold shadow-sm px-3 px-lg-4" style="border-radius: 10px; padding-top: 12px; padding-bottom: 12px;" onclick="openBulkModal()"><i class="bi bi-plus-circle-fill me-1"></i> Çoklu Ekle</button>
+          <button id="btnAdmin" class="btn btn-dark fw-bold shadow-sm px-3 px-lg-4" style="border-radius: 10px; padding-top: 12px; padding-bottom: 12px;" data-bs-toggle="modal" data-bs-target="#passwordModal"><i class="bi bi-gear-fill me-1"></i> Yönetici</button>
+        </div>
+      </div>
+      
+      <div id="loader" class="text-center d-none mt-5"><div class="spinner-border text-secondary" style="width: 3rem; height: 3rem;"></div></div>
+      <div class="row" id="resultsArea"></div>
+
+      <div id="folderOverlay" class="folder-overlay">
+        <div class="container pb-5">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 id="folderTitle" class="fw-bold m-0 text-dark"></h3>
+            <button class="btn btn-anova-dark px-4 py-2 fw-bold shadow-sm rounded-pill" onclick="closeFolder()"><i class="bi bi-x-lg me-1"></i> Kapat</button>
+          </div>
+          <div class="row" id="folderContentArea"></div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="actionModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-responsive">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+      <div class="modal-header bg-light border-bottom-0"><h5 class="modal-title fw-bold text-dark" id="modalDeviceName"></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body p-3 p-md-4">
+        <div id="modalDeviceDetails" class="mb-4"></div>
+        <div id="reserveSection">
+          <div id="reserveForm">
+            <div class="row g-2 mb-3">
+              <div class="col-6"><label class="form-label fw-bold small">Başlangıç:</label><input type="datetime-local" id="resStartDate" class="form-control bg-light border-0 py-2"></div>
+              <div class="col-6"><label class="form-label fw-bold small">Teslim:</label><input type="datetime-local" id="resEndDate" class="form-control bg-light border-0 py-2"></div>
+            </div>
+            <div id="projectInputArea" class="mb-3"><label class="form-label fw-bold small">Kullanılacak Proje:</label><input type="text" id="resProject" class="form-control bg-light border-0 py-2" placeholder="Örn: X Projesi / Test"></div>
+            <div class="mb-4">
+              <label class="form-label fw-bold small">Not:</label>
+              <input type="text" id="resNote" list="noteOptions" class="form-control bg-light border-0 py-2" placeholder="Not veya açıklama girin...">
+              <datalist id="noteOptions"><option value="Saha Testi"><option value="Müşteri Ziyareti"><option value="Laboratuvar İçi Test"><option value="Arızalı - Servise Gidecek"></datalist>
+            </div>
+            <button id="btnReserve" class="btn btn-anova-yellow w-100 fw-bold btn-lg py-2 shadow-sm rounded-3" onclick="reserveDev()">Cihazı Üzerime Al</button>
+          </div>
+        </div>
+        <div id="returnSection" class="d-none">
+          <div id="returnElements">
+            <label class="form-label fw-bold small">İade Notu (Opsiyonel):</label>
+            <input type="text" id="returnNote" class="form-control mb-3 bg-light border-0 py-2">
+          </div>
+          <div class="row g-2">
+            <div class="col-12" id="btnReturnContainer">
+              <button id="btnReturn" class="btn btn-success w-100 fw-bold py-2 shadow-sm rounded-3" onclick="returnDev()">İade Et (Teslim)</button>
+            </div>
+            <div class="col-12">
+              <button id="btnFault" class="btn btn-danger w-100 fw-bold py-2 shadow-sm rounded-3 mt-1" onclick="reportFaultDev()">⚠️ Arıza Bildir</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="bulkModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-responsive">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
+      <div class="modal-header text-dark border-bottom-0" style="background-color: #f4c430;"><h5 class="modal-title fw-bold"><i class="bi bi-ui-checks-grid me-2"></i>Çoklu Cihaz Ekle</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body p-3 p-md-4">
+        <div class="row g-2 mb-3">
+          <div class="col-6"><label class="form-label fw-bold small">Başlangıç:</label><input type="datetime-local" id="bulkStartDate" class="form-control bg-light border-0"></div>
+          <div class="col-6"><label class="form-label fw-bold small">Teslim:</label><input type="datetime-local" id="bulkReturnDate" class="form-control bg-light border-0"></div>
+        </div>
+        <div class="mb-3"><label class="form-label fw-bold small">Kullanılacak Proje:</label><input type="text" id="bulkProject" class="form-control bg-light border-0" placeholder="Örn: X Projesi / Power Test"></div>
+        <div class="mb-4"><label class="form-label fw-bold small">Ortak Not:</label><input type="text" id="bulkNote" class="form-control bg-light border-0" placeholder="Ortak Not"></div>
+        <label class="form-label fw-bold small">Cihaz Kodu Girin:</label>
+        <div class="input-group mb-3 flex-nowrap">
+          <span class="input-group-text bg-light border-0"><i class="bi bi-keyboard text-secondary"></i></span>
+          <input type="text" id="multiCodeInput" class="form-control bg-light border-0 py-2" placeholder="Kodu yazın ve Enter'a basın..." onkeypress="if(event.key==='Enter') addCodeToList()" autocomplete="off">
+          <button class="btn btn-dark fw-bold px-3" onclick="addCodeToList()">Ekle</button>
+        </div>
+        <div class="card p-2 bg-light border-0 mb-4" style="max-height: 150px; overflow-y: auto;">
+          <ul id="multiCodeList" class="list-group list-group-flush bg-transparent">
+            <li class="list-group-item bg-transparent text-muted small text-center py-3" id="emptyCodeText">Henüz cihaz kodu eklenmedi.</li>
+          </ul>
+        </div>
+        <button id="btnBulkSubmit" class="btn btn-anova-yellow w-100 fw-bold py-3 fs-6" onclick="submitBulkReserve()">Hepsini Üzerime Al</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myDevicesModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-responsive">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+      <div class="modal-header bg-dark text-white border-bottom-0"><h5 class="modal-title fw-bold"><i class="bi bi-journal-bookmark-fill me-2"></i>Üzerimdeki Cihazlar</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body p-3 p-md-4">
+        <div class="input-group mb-4 shadow-sm flex-nowrap">
+          <input type="text" id="otherUserSearch" class="form-control border-0 bg-light py-2" placeholder="Kullanıcı ara..." onkeypress="if(event.key==='Enter') searchUserDevices()">
+          <button class="btn btn-secondary px-3 px-md-4 fw-bold" onclick="searchUserDevices()">Ara</button>
+        </div>
+        <div id="myDevicesLoader" class="text-center d-none py-4"><div class="spinner-border text-secondary"></div></div>
+        <ul id="myDevicesList" class="list-group border-0"></ul>
+        <div id="multiReturnSection" class="d-none bg-light p-4 rounded mt-3 border">
+            <input type="text" id="multiReturnNote" class="form-control mb-3 border-0 py-2" placeholder="Ortak iade notu (Opsiyonel)...">
+            <button id="btnReturnAll" class="btn btn-dark w-100 fw-bold py-2 shadow-sm" onclick="bulkReturnMyDevices()"><i class="bi bi-check-all me-1"></i> Kullanımdaki Tüm Cihazları İade Et</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- YÖNETİCİ PANELİ -->
+<div class="modal fade" id="adminModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-responsive">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 15px; overflow:hidden;">
+      <div class="modal-header bg-dark text-white border-bottom-0 p-3 p-md-4">
+        <div class="d-flex align-items-center gap-3">
+          <h4 class="modal-title fw-bold mb-0 fs-5 fs-md-4"><i class="bi bi-gear-fill me-2 text-warning"></i>Yönetici Paneli</h4>
+          <span class="badge bg-danger rounded-pill px-3 py-2 fw-normal" style="font-size:0.75rem; letter-spacing: 0.5px;">Kurucu / Süper</span>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-2 p-md-4 bg-light">
+        <ul class="nav nav-pills mb-3 gap-1 gap-md-2 flex-wrap pb-2 border-bottom" id="adminTabs">
+          <li class="nav-item" id="tab-statistics-btn" class="d-none"><button class="nav-link admin-tab" data-bs-toggle="pill" data-bs-target="#lab-statistics" onclick="loadStatistics()"><i class="bi bi-pie-chart-fill me-1 text-primary"></i>İstatistikler</button></li>
+          <li class="nav-item"><button class="nav-link admin-tab active" data-bs-toggle="pill" data-bs-target="#add-device"><i class="bi bi-plus-lg me-1"></i>Yeni Cihaz Ekle</button></li>
+          <li class="nav-item"><button class="nav-link admin-tab" data-bs-toggle="pill" data-bs-target="#assign-device"><i class="bi bi-person-check-fill me-1"></i>Zimmet Ata / Devret</button></li>
+          <li class="nav-item"><button class="nav-link admin-tab" data-bs-toggle="pill" data-bs-target="#cal-update"><i class="bi bi-calendar-check me-1"></i>Kalibrasyon Güncelle</button></li>
+          <li class="nav-item"><button class="nav-link admin-tab" data-bs-toggle="pill" data-bs-target="#status-manage"><i class="bi bi-wrench-adjustable me-1"></i>Durum Yönetimi</button></li>
+          <li class="nav-item"><button class="nav-link admin-tab" data-bs-toggle="pill" data-bs-target="#device-history" onclick="loadDeviceHistory()"><i class="bi bi-clipboard-data me-1"></i>Cihaz Geçmişi</button></li>
+          <li class="nav-item"><button class="nav-link admin-tab" data-bs-toggle="pill" data-bs-target="#planned-res" onclick="loadPlannedReservations()"><i class="bi bi-pin-angle-fill me-1"></i>Planlı Rzv</button></li>
+          
+          <!-- 📌 YENİ: DIŞ LAB DEVİR SEKME -->
+          <li class="nav-item"><button class="nav-link admin-tab tab-warning" data-bs-toggle="pill" data-bs-target="#outgoing-transfer" onclick="loadOutgoingTransfers()"><i class="bi bi-send-dash me-1"></i>Dış Lab. Devirleri <span id="badge-outgoing" class="badge bg-danger ms-1 d-none rounded-pill">0</span></button></li>
+          <li class="nav-item"><button class="nav-link admin-tab tab-warning" data-bs-toggle="pill" data-bs-target="#quarantine" onclick="loadQuarantine()"><i class="bi bi-hourglass-split me-1"></i>Onay Bekleyenler <span id="badge-quarantine" class="badge bg-danger ms-1 d-none rounded-pill">0</span></button></li>
+          
+          <!-- 📌 GÜÇ ELEKTRONİĞİ KALİBRASYON RAPORU SEKMESİ -->
+          <li class="nav-item"><button class="nav-link admin-tab tab-danger" data-bs-toggle="pill" data-bs-target="#cal-report" onclick="loadCalibrationReport()"><i class="bi bi-file-earmark-bar-graph-fill me-1"></i>Kalibrasyon Raporu <span id="badge-cal-red" class="badge bg-danger ms-1 d-none rounded-pill">0</span><span id="badge-cal-yellow" class="badge bg-warning text-dark ms-1 d-none rounded-pill">0</span></button></li>
+          
+          <li class="nav-item"><button class="nav-link admin-tab" data-bs-toggle="pill" data-bs-target="#admin-manage" onclick="loadAdminList()"><i class="bi bi-key-fill me-1"></i>Yetki Yönetimi</button></li>
+        </ul>
+
+        <div class="tab-content admin-content-box">
+          <div class="tab-pane fade" id="lab-statistics">
+             <div id="statLoader" class="text-center d-none py-5"><div class="spinner-border text-secondary"></div><div class="mt-2 text-muted fw-bold">Veriler Analiz Ediliyor...</div></div>
+             <div class="row g-4" id="statContentArea">
+                <div class="col-md-6"><div class="card p-3 shadow-sm border-0" style="border-radius:12px;"><h6 class="fw-bold text-center mb-3" style="color: #495057;"><i class="bi bi-bar-chart-fill text-warning me-1"></i>En Çok Kullanılan Cihazlar (%)</h6><div style="position: relative; height:320px; width:100%"><canvas id="deviceChart"></canvas></div></div></div>
+                <div class="col-md-6"><div class="card p-3 shadow-sm border-0" style="border-radius:12px;"><h6 class="fw-bold text-center mb-3" style="color: #495057;"><i class="bi bi-pie-chart-fill text-danger me-1"></i>En Çok Cihaz Alan Personeller</h6><div style="position: relative; height:320px; width:100%"><canvas id="userChart"></canvas></div></div></div>
+             </div>
+          </div>
+
+          <div class="tab-pane fade show active" id="add-device">
+            <div class="card p-3 p-md-4 border-0 bg-white shadow-sm" style="border-radius:12px;">
+              <h6 class="fw-bold text-dark mb-3"><i class="bi bi-plus-circle-fill me-2 text-warning"></i>Yeni Demirbaş Kaydı</h6>
+              <div class="row g-2 g-md-3">
+                <div class="col-md-6"><label class="form-label-custom">Demirbaş Kodu*</label><input type="text" id="addCode" class="form-control-custom w-100" placeholder="Örn: 4001-XXXX"></div>
+                <div class="col-md-6"><label class="form-label-custom">Cihaz İsmi*</label><input type="text" id="addName" class="form-control-custom w-100" placeholder="Örn: Multimetre"></div>
+                <div class="col-md-6"><label class="form-label-custom">Kategori / Klasör Adı*</label><select id="addFolderSelect" class="form-control-custom w-100" onchange="toggleCustomFolder()"></select><input type="text" id="addFolderCustom" class="form-control-custom w-100 mt-2 d-none" placeholder="Yeni Klasör Yazın..."></div>
+                <div class="col-md-6"><label class="form-label-custom">Son Kalibrasyon*</label><input type="date" id="addCal" class="form-control-custom w-100"></div>
+                <div class="col-md-4"><label class="form-label-custom">Marka</label><input type="text" id="addBrand" class="form-control-custom w-100"></div>
+                <div class="col-md-4"><label class="form-label-custom">Model</label><input type="text" id="addModel" class="form-control-custom w-100"></div>
+                <div class="col-md-4"><label class="form-label-custom">Seri No</label><input type="text" id="addSerial" class="form-control-custom w-100"></div>
+                <div class="col-md-6"><label class="form-label-custom">Datasheet Linki</label><input type="url" id="addDatasheet" class="form-control-custom w-100" placeholder="https://..."></div>
+                <div class="col-md-6"><label class="form-label-custom">Sertifika Linki</label><input type="url" id="addCert" class="form-control-custom w-100" placeholder="https://..."></div>
+              </div>
+              <button class="btn btn-dark w-100 mt-4 py-3 fw-bold fs-6 shadow-sm rounded-3" onclick="submitNewDevice()"><i class="bi bi-check-lg me-1"></i> Cihazı Envantere Kaydet</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane fade" id="assign-device">
+            <div class="card p-3 p-md-4 border-0 bg-white shadow-sm" style="border-radius:12px;">
+              <h6 class="fw-bold text-dark mb-3"><i class="bi bi-person-badge-fill me-2 text-primary"></i>Direkt Zimmet ve Departman Transferi</h6>
+              <div class="mb-4">
+                <div class="btn-group w-100 shadow-sm" role="group">
+                  <input type="radio" class="btn-check" name="transferType" id="typePerson" autocomplete="off" checked onchange="toggleAssignType()">
+                  <label class="btn btn-outline-dark fw-bold" for="typePerson">Personele Zimmetle</label>
+                  <input type="radio" class="btn-check" name="transferType" id="typeLab" autocomplete="off" onchange="toggleAssignType()">
+                  <label class="btn btn-outline-dark fw-bold" for="typeLab">Dış Birime Devret</label>
+                </div>
+              </div>
+              <div class="row g-2 g-md-3">
+                <div class="col-md-6"><label class="form-label-custom">Cihaz Kodu*</label><input type="text" id="assignCode" class="form-control-custom w-100" placeholder="Örn: 4001-XXXX"></div>
+                <div class="col-md-6" id="personInputGroup"><label class="form-label-custom">Personel Mail Adresi*</label><input type="email" id="assignEmail" class="form-control-custom w-100" placeholder="Örn: isim@anova.com.tr"></div>
+                <div class="col-md-6 d-none" id="labInputGroup"><label class="form-label-custom">Hedef Departman / Lab*</label>
+                  <select id="assignLabSelect" class="form-control-custom w-100">
+                    <option value="kalite">Kalite Birimi</option>
+                    <option value="mekanik">Mekanik Laboratuvarı</option>
+                  </select>
+                </div>
+                <div class="col-12"><label class="form-label-custom">Atama / Transfer Notu (İsteğe Bağlı)</label><input type="text" id="assignNote" class="form-control-custom w-100" placeholder="Teslim notu veya gerekçe..."></div>
+              </div>
+              <button id="btnSubmitAssign" class="btn btn-success w-100 mt-4 py-3 fw-bold fs-6 shadow-sm rounded-3" onclick="submitTransferLogic()"><i class="bi bi-person-check-fill me-1"></i> Personele Zorunlu Zimmetle</button>
+            </div>
+          </div>
+
+          <div class="tab-pane fade" id="cal-update">
+            <div class="card p-3 p-md-4 border-0 bg-white shadow-sm" style="border-radius:12px;">
+              <h6 class="fw-bold text-dark mb-3"><i class="bi bi-calendar-check-fill me-2 text-info"></i>Kalibrasyon Tarihi Güncelleme</h6>
+              <div class="row g-2 g-md-3">
+                <div class="col-md-6"><label class="form-label-custom">Cihaz Kodu</label><input type="text" id="calUpdateCode" class="form-control-custom w-100" placeholder="Örn: 4001-XXXX"></div>
+                <div class="col-md-6"><label class="form-label-custom">Yeni Kalibrasyon Tarihi</label><input type="date" id="calUpdateDate" class="form-control-custom w-100"></div>
+              </div>
+              <button class="btn btn-primary w-100 mt-4 py-3 fw-bold shadow-sm rounded-3" onclick="submitCalibrationUpdate()"><i class="bi bi-arrow-repeat me-1"></i> Tarihi Güncelle</button>
+            </div>
+          </div>
+
+          <div class="tab-pane fade" id="status-manage">
+            <div class="card p-3 p-md-4 border-0 bg-white shadow-sm" style="border-radius:12px;">
+              <h6 class="fw-bold text-dark mb-3"><i class="bi bi-wrench-adjustable-circle-fill me-2 text-warning"></i>Manuel Cihaz Durum Güncelleme</h6>
+              <div class="row g-2 g-md-3">
+                <div class="col-md-6"><label class="form-label-custom">Cihaz Kodu</label><input type="text" id="statusDevCode" class="form-control-custom w-100" placeholder="Örn: 4001-XXXX"></div>
+                <div class="col-md-6"><label class="form-label-custom">Yeni Durum</label><select class="form-control-custom w-100" id="statusSelect"><option value="Müsait">🟢 Müsait</option><option value="Arızalı">🔴 Arızalı</option><option value="Kalibrasyonda">🟠 Kalibrasyonda</option></select></div>
+                <div class="col-12"><label class="form-label-custom">Arıza / Durum Notu</label><input type="text" id="arizaNoteInput" class="form-control-custom w-100" placeholder="Açıklama veya gerekçe yazınız..."></div>
+              </div>
+              <button class="btn btn-dark w-100 mt-4 py-3 fw-bold shadow-sm rounded-3" onclick="submitStatusUpdate()"><i class="bi bi-save-fill me-1"></i> Durumu Güncelle</button>
+            </div>
+          </div>
+          
+          <div class="tab-pane fade" id="device-history">
+            <div class="card p-2 p-md-4 border-0 bg-white shadow-sm" style="border-radius:12px;">
+              <h6 class="fw-bold text-dark mb-3 px-2 px-md-0"><i class="bi bi-clock-history me-2 text-secondary"></i>Tüm Cihaz Hareket Geçmişi</h6>
+              <div class="input-group mb-3 shadow-sm flex-nowrap">
+                <span class="input-group-text bg-light border-end-0 d-none d-sm-block"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" id="historySearchInput" class="form-control form-control-custom border-start-0 flex-grow-1 rounded-0" placeholder="Kod, marka veya isim ara..." onkeypress="if(event.key==='Enter') loadDeviceHistory()">
+                <button class="btn btn-dark px-3 px-md-4 rounded-end-3 fw-bold" onclick="loadDeviceHistory()">Ara</button>
+              </div>
+              <div id="historyLoader" class="text-center d-none py-3"><div class="spinner-border text-secondary"></div></div>
+              
+              <div class="table-responsive border rounded-3 shadow-sm">
+                <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+                  <thead class="table-dark">
+                    <tr>
+                      <th>Demirbaş Kodu</th><th>Cihaz İsmi</th><th>Marka</th><th>Model</th><th>Alan Kişi</th>
+                      <th>E-posta</th><th>Alış Tarihi</th><th>Tahmini Teslim</th><th>Gerçek Teslim</th><th>Durum</th><th>Not</th>
+                    </tr>
+                  </thead>
+                  <tbody id="historyTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          <div class="tab-pane fade" id="planned-res">
+            <div class="card p-2 p-md-4 border-0 bg-white shadow-sm" style="border-radius:12px;">
+              <h6 class="fw-bold text-dark mb-3 px-2 px-md-0"><i class="bi bi-calendar-event-fill me-2 text-warning"></i>Gelecek Tarihli Planlı Rezervasyonlar</h6>
+              <div id="plannedLoader" class="text-center d-none py-3"><div class="spinner-border text-secondary"></div></div>
+              <div class="table-responsive border rounded-3 shadow-sm">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-dark">
+                    <tr><th>Kod</th><th>Cihaz</th><th>Kişi</th><th>Mail</th><th>Başlangıç</th><th>Bitiş</th><th class="text-center">İşlem</th></tr>
+                  </thead>
+                  <tbody id="plannedTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- 📌 YENİ: DIŞ LAB DEVİR SEKME İÇERİĞİ -->
+          <div class="tab-pane fade" id="outgoing-transfer">
+            <div class="card p-2 p-md-4 border-0 bg-white shadow-sm" style="border-radius:12px;">
+              <h6 class="fw-bold text-dark mb-3 px-2 px-md-0"><i class="bi bi-send-dash me-2 text-warning"></i>Onay Bekleyen Dış Laboratuvar Devirleri</h6>
+              <div id="outgoingLoader" class="text-center d-none py-3"><div class="spinner-border text-secondary"></div></div>
+              <div class="table-responsive border rounded-3 shadow-sm">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-dark">
+                    <tr><th>Demirbaş Kodu</th><th>Cihaz İsmi</th><th>Bekleyen Laboratuvar</th><th class="text-center">İşlem</th></tr>
+                  </thead>
+                  <tbody id="outgoingTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane fade" id="quarantine">
+            <div class="card p-2 p-md-4 border-0 bg-white shadow-sm" style="border-radius:12px;">
+              <h6 class="fw-bold text-dark mb-3 px-2 px-md-0"><i class="bi bi-hourglass-split me-2 text-danger"></i>Yönetici Onayı Bekleyen İşlemler</h6>
+              <div id="qLoader" class="text-center d-none py-3"><div class="spinner-border text-secondary"></div></div>
+              <div class="table-responsive border rounded-3 shadow-sm">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-dark">
+                    <tr><th>Demirbaş Kodu</th><th>Cihaz İsmi</th><th>Bekleyen Durum</th><th class="text-center">İşlem</th></tr>
+                  </thead>
+                  <tbody id="quarantineTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- 📌 GÜÇ ELEKTRONİĞİ LOKAL RAPOR KISMI EKLENDİ -->
+          <div class="tab-pane fade" id="cal-report">
+            <div class="card p-2 p-md-4 border-0 bg-white shadow-sm" style="border-radius:12px;">
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+                <div>
+                  <h6 class="fw-bold text-dark m-0"><i class="bi bi-file-earmark-bar-graph-fill me-2 text-danger"></i>Güç Elektroniği - Kalibrasyon Taraması</h6>
+                  <small class="text-muted">Laboratuvarınızdaki süresi dolmuş veya yaklaşmış (Son 30 gün) cihazlar.</small>
+                </div>
+                <button class="btn btn-danger fw-bold shadow-sm rounded-3 px-3 py-2" onclick="exportCalReportPDF()"><i class="bi bi-file-earmark-pdf-fill me-1"></i> PDF Rapor Al</button>
+              </div>
+              <div id="reportLoader" class="text-center d-none py-3"><div class="spinner-border text-secondary"></div></div>
+              <div class="table-responsive border rounded-3 shadow-sm">
+                <table class="table table-hover align-middle mb-0">
+                   <thead class="table-dark">
+                     <tr><th>Kod</th><th>Cihaz</th><th>Marka / Model</th><th>Son Kalibrasyon</th><th class="text-center">Durum</th></tr>
+                   </thead>
+                   <tbody id="reportTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane fade" id="admin-manage" style="position: relative;">
+            <div id="superAdminOverlay" class="d-none" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 50; background: rgba(244,245,247,0.4); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(6px); border-radius: 12px;">
+               <div class="bg-dark text-white p-4 rounded-4 shadow-lg text-center" style="max-width: 400px; border: 2px solid #dc3545;"><i class="bi bi-shield-lock-fill text-danger mb-3 d-block" style="font-size: 3.5rem;"></i><h5 class="fw-bold mb-2">Erişim Reddedildi</h5><p class="mb-0 text-light" style="font-size: 0.95rem;">Bu sayfayı açabilmek ve yetki işlemlerini görebilmek için <b class="text-danger">Süper Admin</b> yetkisi gerekmektedir.</p></div>
+            </div>
+
+            <div id="adminManageContent" style="transition: filter 0.3s ease;">
+              <div class="card p-3 p-md-4 mb-4 border-0 bg-white shadow-sm" style="border-radius:12px;">
+                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-person-plus-fill me-2 text-warning"></i>Yeni Yönetici Tanımla</h6>
+                <div class="row g-2 g-md-3 align-items-end">
+                  <div class="col-md-4"><label class="form-label-custom">Admin Mail Adresi*</label><input type="email" id="newAdminEmail" class="form-control-custom w-100" placeholder="isim@anova.com.tr"></div>
+                  <div class="col-md-3"><label class="form-label-custom">Giriş Şifresi*</label><input type="text" id="newAdminPass" class="form-control-custom w-100" placeholder="Şifre belirleyin"></div>
+                  <div class="col-md-2 d-flex align-items-center mb-2"><div class="form-check form-switch w-100"><input class="form-check-input" type="checkbox" id="newAdminSuper" style="transform: scale(1.3); cursor: pointer;"><label class="form-check-label fw-bold ms-2" for="newAdminSuper" style="cursor:pointer;">Süper<br>Admin</label></div></div>
+                  <div class="col-md-3"><button class="btn btn-success w-100 fw-bold py-2 shadow-sm rounded-3" onclick="addNewAdmin()"><i class="bi bi-shield-lock-fill me-1"></i> Yetki Ver</button></div>
+                </div>
+              </div>
+
+              <div class="table-responsive border rounded-3 shadow-sm bg-white">
+                <table class="table table-hover mb-0">
+                  <thead class="table-dark align-middle">
+                    <tr><th class="py-3 px-3">Yönetici E-Posta</th><th class="text-center py-3">Şifre</th><th class="text-center py-3">Süper Admin?</th><th class="text-center py-3">Bildirim Gitsin mi?</th><th class="text-center py-3">İşlem</th></tr>
+                  </thead>
+                  <tbody id="adminTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="passwordModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-sm modal-dialog-responsive">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+      <div class="modal-header bg-dark text-white border-0" style="border-radius: 15px 15px 0 0;">
+        <h5 class="modal-title fw-bold">🔒 Yönetici Girişi</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4 text-center">
+        <input type="password" id="adminPasswordInput" class="form-control bg-light border-0 mb-3 text-center py-2" placeholder="Şifre" onkeypress="if(event.key==='Enter') verifyAdmin()">
+        <button id="btnVerify" class="btn btn-anova-yellow fw-bold w-100 py-2" onclick="verifyAdmin()">Giriş Yap</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="quarantineReviewModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-responsive">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+      <div class="modal-header bg-dark text-white border-0" style="border-radius: 15px 15px 0 0;">
+        <h5 class="modal-title fw-bold"><i class="bi bi-search me-2 text-warning"></i>İnceleme ve Onay</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4 bg-light">
+        <div id="qRevContextBlock" class="alert alert-warning d-none mb-3" style="font-size: 0.85rem; border-left: 5px solid #ffc107;">
+           <div class="fw-bold text-dark mb-1"><i class="bi bi-info-circle-fill me-1"></i> İşlem Özeti</div>
+           <div class="text-dark"><b>Talebi Yapan / Kaynak:</b> <span id="qRevUser"></span></div>
+           <div class="text-dark"><b>Son Durum:</b> <span id="qRevAction"></span></div>
+           <div class="text-dark"><b>İşlem Notu:</b> <span id="qRevNote"></span></div>
+        </div>
+        <div class="mb-3"><label class="form-label-custom">Demirbaş Kodu (Değiştirilemez)</label><input type="text" id="qRevCode" class="form-control-custom w-100 bg-white fw-bold text-dark" readonly></div>
+        <div class="mb-3"><label class="form-label-custom">Cihaz İsmi</label><input type="text" id="qRevName" class="form-control-custom w-100 bg-white"></div>
+        <div class="row g-2 mb-3">
+          <div class="col-6"><label class="form-label-custom">Marka</label><input type="text" id="qRevBrand" class="form-control-custom w-100 bg-white"></div>
+          <div class="col-6"><label class="form-label-custom">Model</label><input type="text" id="qRevModel" class="form-control-custom w-100 bg-white"></div>
+        </div>
+        <div class="mb-4"><label class="form-label-custom">Son Kalibrasyon Tarihi</label><input type="date" id="qRevCal" class="form-control-custom w-100 bg-white"></div>
+        <div class="d-flex gap-2">
+           <button class="btn btn-outline-danger w-50 fw-bold py-2 shadow-sm rounded-3" onclick="submitQuarantineReject()"><i class="bi bi-x-circle-fill me-1"></i> Reddet / İptal Et</button>
+           <button class="btn btn-success w-50 fw-bold py-2 shadow-sm rounded-3" onclick="submitQuarantineApprove()"><i class="bi bi-check-circle-fill me-1"></i> Güncelle ve Onayla</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="customAlertModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-sm modal-dialog-responsive"><div class="modal-content border-0 shadow-lg" style="border-radius: 15px;"><div class="modal-header border-0 pb-0 justify-content-center mt-3"><h5 id="customAlertTitle" class="fw-bold mb-3">Mesaj</h5></div><div class="modal-body p-4 text-center"><p id="customAlertMessage"></p><button class="btn btn-dark w-100 mt-2 fw-bold" data-bs-dismiss="modal">Tamam</button></div></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+<script>
+const currentUserEmail = "<?= userEmail ?>".toLowerCase().trim();
+let allGlobalLabData = [], selectedDevice = null, globalQuarantineList = [], globalCalData = [];
+let devChartInstance = null, userChartInstance = null, multiDeviceCodes = [];
+
+// Kullanıcı girdisi içeren metinleri HTML'e basmadan önce güvenli hale getirir (XSS koruması)
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+document.addEventListener("DOMContentLoaded", () => { 
+  try{ document.getElementById('adminModal').addEventListener('hidden.bs.modal', function () { document.querySelectorAll('#adminModal input').forEach(input => { if (input.type !== 'checkbox' && input.type !== 'button') input.value = ''; }); }); }catch(e){}
+  fetchLabDataFromServer();
+});
+
+function parseTrDate(dateStr) {
+    if (!dateStr || dateStr === '-') return null;
+    let parts = String(dateStr).split('.');
+    if (parts.length === 3) return new Date(parts[2], parts[1] - 1, parts[0]);
+    return null;
+}
+
+function toggleAssignType() {
+    let isPerson = document.getElementById('typePerson').checked;
+    document.getElementById('personInputGroup').classList.toggle('d-none', !isPerson);
+    document.getElementById('labInputGroup').classList.toggle('d-none', isPerson);
+    let btn = document.getElementById('btnSubmitAssign');
+    if(isPerson) { btn.className = "btn btn-success w-100 mt-4 py-3 fw-bold fs-6 shadow-sm rounded-3"; btn.innerHTML = '<i class="bi bi-person-check-fill me-1"></i> Personele Zorunlu Zimmetle'; } 
+    else { btn.className = "btn btn-primary w-100 mt-4 py-3 fw-bold fs-6 shadow-sm rounded-3"; btn.innerHTML = '<i class="bi bi-building-up me-1"></i> Dış Birime Devret'; }
+}
+
+function submitTransferLogic() {
+    let c = document.getElementById('assignCode').value.trim(), n = document.getElementById('assignNote').value.trim(), isPerson = document.getElementById('typePerson').checked;
+    if(!c) return showCustomAlert("HATA: Cihaz Kodu zorunludur!", true);
+    if(isPerson) {
+        let e = document.getElementById('assignEmail').value.trim();
+        if(!e) return showCustomAlert("HATA: Personel Mail Adresi zorunludur!", true);
+        google.script.run.withSuccessHandler(m => { showCustomAlert(m, false); fetchLabDataFromServer(); document.getElementById('assignCode').value = ''; document.getElementById('assignEmail').value = ''; document.getElementById('assignNote').value = ''; }).withFailureHandler(err => showCustomAlert("HATA: " + (err.message||err), true)).adminAssignDevice(c, e, n);
+    } else {
+        let labSelect = document.getElementById('assignLabSelect');
+        let labKey = labSelect.value;
+        let labName = labSelect.options[labSelect.selectedIndex].text;
+        if(!confirm(`DİKKAT: Bu cihaz Güç Elektroniği stoklarından çıkarılacak ve ${labName} onay havuzuna gönderilecektir. Onaylıyor musunuz?`)) return;
+        google.script.run.withSuccessHandler(m => { showCustomAlert(m, false); loadOutgoingTransfers(); fetchLabDataFromServer(); refreshAdminStats(); document.getElementById('assignCode').value = ''; document.getElementById('assignNote').value = ''; }).withFailureHandler(err => showCustomAlert("HATA: " + (err.message||err), true)).transferToLab(c, labKey, n);
+    }
+}
+
+function refreshAdminStats() {
+    google.script.run.withSuccessHandler(stats => {
+        if(!stats) return;
+        let bQ = document.getElementById('badge-quarantine');
+        let bO = document.getElementById('badge-outgoing');
+        let bCR = document.getElementById('badge-cal-red');
+        let bCY = document.getElementById('badge-cal-yellow');
+        if(bQ) { if(stats.quarantine > 0) { bQ.innerText = stats.quarantine; bQ.classList.remove('d-none'); } else { bQ.classList.add('d-none'); } }
+        if(bO) { if(stats.outgoing > 0) { bO.innerText = stats.outgoing; bO.classList.remove('d-none'); } else { bO.classList.add('d-none'); } }
+        if(bCR) { if(stats.calRed > 0) { bCR.innerText = stats.calRed; bCR.classList.remove('d-none'); } else { bCR.classList.add('d-none'); } }
+        if(bCY) { if(stats.calYellow > 0) { bCY.innerText = stats.calYellow; bCY.classList.remove('d-none'); } else { bCY.classList.add('d-none'); } }
+    }).getAdminStats();
+}
+
+function verifyAdmin() { 
+    let p = document.getElementById('adminPasswordInput').value; if(!p) return;
+    let btn = document.getElementById('btnVerify'); btn.innerText = "Kontrol ediliyor..."; btn.disabled = true;
+    google.script.run.withSuccessHandler(r => { 
+          btn.innerText = "Giriş Yap"; btn.disabled = false; bootstrap.Modal.getOrCreateInstance(document.getElementById('passwordModal')).hide(); document.getElementById('adminPasswordInput').value = ''; 
+          if(r.role === "super") { document.getElementById('tab-statistics-btn').classList.remove('d-none'); } else { document.getElementById('tab-statistics-btn').classList.add('d-none'); }
+          openAdminDashboard(); 
+    }).withFailureHandler(err => { btn.innerText = "Giriş Yap"; btn.disabled = false; showCustomAlert("HATA: " + (err.message || err), true); }).verifyAdminLogin(p); 
+}
+
+function openAdminDashboard() {
+  let folderSet = new Set();
+  allGlobalLabData.forEach(dev => { if(dev['Klasörleme']) folderSet.add(dev['Klasörleme']); });
+  document.getElementById('addFolderSelect').innerHTML = '<option value="">Klasör Seçiniz...</option>' + Array.from(folderSet).sort().map(f => '<option value="' + f + '">' + f + '</option>').join('') + '<option value="_OTHER_">➕ Diğer (Yeni)</option>';
+  refreshAdminStats(); bootstrap.Modal.getOrCreateInstance(document.getElementById('adminModal')).show();
+}
+
+function showCustomAlert(msg, isError=false) { 
+  try {
+      let cleanMessage = String(msg).replace(/^Error:\s*/i, '').replace(/^HATA:\s*/i, '');
+      if (isError && String(msg).includes("HATA")) { document.getElementById('customAlertMessage').innerText = cleanMessage; document.getElementById('customAlertTitle').innerText = "İşlem Başarısız"; document.getElementById('customAlertTitle').className = "fw-bold mb-3 text-danger"; bootstrap.Modal.getOrCreateInstance(document.getElementById('customAlertModal')).show(); return; }
+      let container = document.getElementById('toastContainer');
+      if(!container) { container = document.createElement('div'); container.id = 'toastContainer'; container.className = 'toast-container'; document.body.appendChild(container); }
+      let toast = document.createElement('div'); toast.className = 'custom-toast ' + (isError ? 'error' : 'success'); toast.innerHTML = '<i class="bi ' + (isError ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success') + ' fs-5"></i> <span>' + escapeHtml(cleanMessage) + '</span>';
+      container.appendChild(toast); setTimeout(() => { toast.classList.add('fade-out'); setTimeout(() => toast.remove(), 400); }, 3500);
+  } catch(e) { alert(msg); }
+}
+
+function fetchLabDataFromServer() {
+    document.getElementById('loader').classList.remove('d-none'); document.getElementById('resultsArea').innerHTML = '';
+    google.script.run.withSuccessHandler(res => { allGlobalLabData = res || []; performLocalSearch(); })
+        .withFailureHandler(err => { document.getElementById('loader').classList.add('d-none'); showCustomAlert(err.message || err, true); }).getLabData();
+}
+
+function performLocalSearch() {
+    document.getElementById('loader').classList.add('d-none');
+    if (document.getElementById('folderOverlay').classList.contains('show-folder')) { openFolder(document.getElementById('folderTitle').innerText); }
+    let q = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (q === "") {
+      let folders = {}; allGlobalLabData.forEach(dev => { let fName = dev['Klasörleme'] || "Genel"; if (!folders[fName]) folders[fName] = []; folders[fName].push(dev); });
+      let html = Object.keys(folders).sort().map((f, i) => '<div class="col-12 col-lg-6 mb-3 fade-in-up" style="animation-delay: ' + (i * 0.05) + 's;"><div class="category-card" onclick="openFolder(\'' + f + '\')"><h6 class="fw-bold mb-3 text-uppercase" style="font-size:0.9rem; letter-spacing:0.5px;">' + f + '</h6><div class="d-flex justify-content-between align-items-center mt-auto"><span class="badge bg-light text-secondary border">' + folders[f].length + ' Cihaz</span><span style="color:#adb5bd;font-weight:bold;">→</span></div></div></div>').join('');
+      document.getElementById('resultsArea').innerHTML = html === "" ? '<div class="col-12 text-center py-5 fade-in-up"><i class="bi bi-inbox text-muted" style="font-size: 3rem; opacity: 0.5;"></i><h5 class="mt-3 text-muted fw-bold">Kayıt Bulunmuyor</h5></div>' : html;
+    } else {
+      let filtered = allGlobalLabData.filter(d => d['_searchString'].includes(q));
+      document.getElementById('resultsArea').innerHTML = filtered.length === 0 ? '<div class="col-12 text-center py-5 fade-in-up"><i class="bi bi-search text-muted" style="font-size: 3rem; opacity: 0.5;"></i><h5 class="mt-3 text-muted fw-bold">Sonuç Bulunamadı</h5></div>' : filtered.map((dev, i) => generateDeviceCard(dev, i)).join('');
+    }
+}
+
+function generateDeviceCard(dev, index) {
+    let delay = index * 0.05, isK = dev['Durum'] && dev['Durum'].trim() === 'Kullanımda', isA = String(dev['Arızalı']).toLowerCase() === 'true', isWait = dev['Durum'] && dev['Durum'].trim() === 'İade Onayı Bekliyor';
+    let isMine = isK && dev['ActiveDetails'] && String(dev['ActiveDetails'].email).toLowerCase().trim() === currentUserEmail, isSomeoneElse = isK && !isMine;
+    let isC = String(dev['Kalibrasyonda']).toLowerCase() === 'true';
+    let isPlanli = (!isK && !isA && !isC && dev['UpcomingRez'] && dev['UpcomingRez'].length > 0);
+
+    let title = escapeHtml(dev['Cihaz İsmi'] || 'Cihaz');
+    if (dev['Marka'] && dev['Marka'].trim() !== '') title += ' - ' + escapeHtml(dev['Marka']);
+    if (dev['Model'] && dev['Model'].trim() !== '') title += ' ' + escapeHtml(dev['Model']);
+
+    let fS = "Müsait", sC = "status-musait", bC = "";
+    if (isA) { fS = "Arızalı"; sC = "status-arizali"; bC = "border-arizali-card"; } 
+    else if (isC) { fS = "Kalibrasyonda"; sC = "status-kalibrasyonda"; bC = "border-kalibrasyonda-card"; } 
+    else if (isWait) { fS = "İade Bekliyor"; sC = "badge bg-warning text-dark px-2 py-1 border border-warning"; bC = "border-cal-warning"; }
+    else if (isMine) { fS = "Kullanımda"; sC = "status-kullanimda"; bC = "border-kullanimda"; } 
+    else if (isSomeoneElse) { fS = "Kullanımda"; sC = "status-kullanimda"; bC = "border-someone-else"; }
+    else if (isPlanli) { fS = "Planlı Rzv"; sC = "badge bg-secondary text-white px-2 py-1 border border-secondary"; bC = "border-planli-card"; }
+
+    let activeUserHtml = "";
+    if (isK) {
+        if (dev['ActiveDetails']) {
+            activeUserHtml = '<div class="mt-3 p-2 rounded" style="background-color: #fffafb; border: 1px solid #ff9999;"><div class="text-danger fw-bold" style="font-size: 0.85rem;">Şu an kimde: ' + escapeHtml(dev['ActiveDetails'].kisi) + '</div><div class="text-muted mt-1" style="font-size: 0.75rem;"><b>Alış:</b> ' + escapeHtml(dev['ActiveDetails'].alindi) + ' <br><b>Teslim:</b> ' + escapeHtml(dev['ActiveDetails'].teslim) + '</div></div>';
+        } else {
+            activeUserHtml = '<div class="mt-3 p-2 rounded" style="background-color: #fffafb; border: 1px solid #ff9999;"><div class="text-danger fw-bold" style="font-size: 0.85rem;">Şu an kullanımda</div></div>';
+        }
+    }
+    if (isPlanli) {
+       let nR = dev['UpcomingRez'][0];
+       activeUserHtml += '<div class="mt-2 text-secondary" style="font-size:0.75rem; font-weight:600;">Gelecek Rzv: ' + nR.start + '</div>';
+    }
+
+    let linkHtml = "";
+    if(dev['Datasheet Linki'] || dev['Sertifika Linki']) {
+        linkHtml += '<div class="mt-3 pt-3 d-flex flex-wrap gap-2" style="border-top: 1px dashed #dee2e6;">';
+        if(dev['Sertifika Linki']) linkHtml += '<a href="' + dev['Sertifika Linki'] + '" target="_blank" onclick="event.stopPropagation();" class="doc-btn doc-btn-cal"><i class="bi bi-file-earmark-medical-fill"></i> Sertifika</a>';
+        if(dev['Datasheet Linki']) linkHtml += '<a href="' + dev['Datasheet Linki'] + '" target="_blank" onclick="event.stopPropagation();" class="doc-btn doc-btn-ds"><i class="bi bi-file-earmark-pdf-fill"></i> Datasheet</a>';
+        linkHtml += '</div>';
+    }
+
+    let rezBadgeHtml = isPlanli ? '<span class="badge bg-warning text-dark border border-warning shadow-sm" style="position: absolute; top: -10px; right: -10px; font-size: 0.7rem;"><i class="bi bi-calendar-event-fill me-1"></i>Planlı</span>' : '';
+
+    let escapedDev = JSON.stringify(dev).replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+    return '<div class="col-12 col-lg-6 mb-3 fade-in-up" style="animation-delay: ' + delay + 's;"><div class="card p-3 ' + bC + '" style="position: relative;" onclick="selectDevice(\'' + escapedDev + '\')">' + rezBadgeHtml + '<div class="d-flex justify-content-between align-items-start"><h6 class="fw-bold mb-1">' + title + '</h6><span class="' + sC + '">' + fS + '</span></div><div class="small text-muted mt-2">Kod: <b>' + dev['Demirbaş Kodu'] + '</b><br>Kalibrasyon: ' + (dev['Son Kalibrasyon']||'-') + '</div>' + activeUserHtml + linkHtml + '</div></div>';
+}
+
+function openFolder(fName) {
+    document.getElementById('folderTitle').innerText = fName;
+    let filtered = allGlobalLabData.filter(dev => (dev['Klasörleme'] || "Genel") === fName);
+    document.getElementById('folderContentArea').innerHTML = filtered.map((dev, i) => generateDeviceCard(dev, i)).join('');
+    if (!document.getElementById('folderOverlay').classList.contains('show-folder')) document.getElementById('folderOverlay').classList.add('show-folder');
+}
+
+function closeFolder() { document.getElementById('folderOverlay').classList.remove('show-folder'); }
+
+function selectDevice(escapedDevString) {
+  let dev = JSON.parse(escapedDevString.replace(/&quot;/g, '"').replace(/&apos;/g, "'"));
+  selectedDevice = dev;
+  
+  let isA = String(dev['Arızalı']).toLowerCase() === 'true', isWait = dev['Durum'] && dev['Durum'].trim() === 'İade Onayı Bekliyor';
+  let isK = dev['Durum'] && dev['Durum'].trim() === 'Kullanımda', isMine = isK && dev['ActiveDetails'] && String(dev['ActiveDetails'].email).toLowerCase().trim() === currentUserEmail;
+  let isSomeoneElse = isK && !isMine;
+  let isC = String(dev['Kalibrasyonda']).toLowerCase() === 'true';
+  
+  let title = (dev['Cihaz İsmi'] || 'Cihaz').toUpperCase();
+  let markaModel = "";
+  if (dev['Marka'] && dev['Marka'].trim() !== '') { title += ' - ' + dev['Marka']; markaModel += dev['Marka']; }
+  if (dev['Model'] && dev['Model'].trim() !== '') { title += ' ' + dev['Model']; markaModel += (markaModel ? " / " : "") + dev['Model']; }
+  
+  document.getElementById('modalDeviceName').innerText = title;
+  
+  let dH = '<div class="mb-3" style="color: #6c757d; font-size: 0.95rem; line-height: 1.6;"><div>Kod: <b style="color: #343a40;">' + escapeHtml(dev['Demirbaş Kodu']) + '</b></div>' + (markaModel ? '<div>Marka / Model: <b style="color: #343a40;">' + escapeHtml(markaModel) + '</b></div>' : '') + '<div>Kalibrasyon: <b style="color: #343a40;">' + escapeHtml(dev['Son Kalibrasyon']||'-') + '</b></div></div>';
+  
+  if (isA) dH += '<div class="mt-3 p-2 bg-danger text-white rounded fw-bold text-center">Arızalı! Not: ' + escapeHtml(dev['ArizaNotu']) + '</div>';
+  else if (isWait) dH += '<div class="mt-3 p-2 bg-warning text-dark rounded fw-bold text-center"><i class="bi bi-hourglass-split me-1"></i> Yönetici İade Onayı Bekliyor</div>';
+  
+  if (dev['UpcomingRez'] && dev['UpcomingRez'].length > 0) {
+      let r = dev['UpcomingRez'][0];
+      dH += '<div class="mt-3 p-3 rounded d-flex justify-content-between align-items-center" style="background-color: #fff9e6; border: 1px solid #ffcc00;"><div class="text-dark small"><div class="text-warning fw-bold mb-2"><i class="bi bi-calendar-event me-1"></i> Planlı Rzv</div><b>Rezerve Eden:</b> ' + escapeHtml(r.kisi) + '<br><b>Başlangıç:</b> ' + escapeHtml(r.start) + '<br><b>Teslim:</b> ' + escapeHtml(r.end) + '</div><div><button class="btn btn-sm btn-outline-danger fw-bold px-3 py-2 ms-2" onclick="cancelReservationFromModal(\'' + dev['Demirbaş Kodu'] + '\')">İptal Et</button></div></div>';
+  }
+
+  document.getElementById('modalDeviceDetails').innerHTML = dH;
+  
+  let nowD = new Date(); nowD.setMinutes(nowD.getMinutes() - nowD.getTimezoneOffset());
+  document.getElementById('resStartDate').value = nowD.toISOString().slice(0, 16);
+  document.getElementById('resEndDate').value = ""; document.getElementById('resProject').value = ""; document.getElementById('resNote').value = "";
+
+  document.getElementById('reserveSection').classList.toggle('d-none', (isA || isC));
+  
+  let btnReserve = document.getElementById('btnReserve');
+  if(isK) btnReserve.innerText = "İleri Tarihli Rezervasyon Yap";
+  else btnReserve.innerText = "Rezervasyon Yap / Üzerime Al";
+
+  if (isWait || isSomeoneElse) {
+      document.getElementById('returnSection').classList.remove('d-none'); document.getElementById('returnElements').classList.add('d-none'); document.getElementById('btnReturnContainer').classList.add('d-none'); document.getElementById('transferSection').classList.add('d-none');
+  } else {
+      document.getElementById('returnSection').classList.remove('d-none'); document.getElementById('returnElements').classList.toggle('d-none', !isK); document.getElementById('btnReturnContainer').classList.toggle('d-none', !isK); document.getElementById('transferSection').classList.toggle('d-none', !isMine);
+  }
+  
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('actionModal')).show();
+}
+
+function cancelReservationFromModal(code) {
+  if(!confirm("Bu planlı rezervasyonu iptal etmek istediğinize emin misiniz?")) return;
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('actionModal')).hide();
+  google.script.run.withSuccessHandler(m => { showCustomAlert(m, false); fetchLabDataFromServer(); }).withFailureHandler(e => showCustomAlert("HATA: " + (e.message||e), true)).cancelReservation(code);
+}
+
+function reserveDev() {
+  let sDate = document.getElementById('resStartDate').value, eDate = document.getElementById('resEndDate').value;
+  if (!sDate || !eDate) return showCustomAlert("Başlangıç ve Bitiş tarihi zorunludur!", true);
+  
+  let sD = new Date(sDate), rD = new Date(eDate), nowD = new Date(); nowD.setMinutes(nowD.getMinutes() - 2); 
+  let isK = selectedDevice['Durum'] && selectedDevice['Durum'].trim() === 'Kullanımda';
+  
+  if (isK && sD <= nowD) return showCustomAlert("HATA: Cihaz şu an kullanımda! Anında üzerinize alamazsınız, ileri bir tarih seçiniz.", true);
+  if (rD <= sD) return showCustomAlert("HATA: Teslim tarihi başlangıçtan sonra olmalıdır!", true);
+  
+  let calStr = selectedDevice['Son Kalibrasyon'], calDate = parseTrDate(calStr);
+  if (calDate && rD > calDate) {
+      if(!confirm("⚠️ UYARI: Cihazın kalibrasyonu (" + calStr + ") geçmiş veya teslim tarihinizden önce doluyor. Yine de almak istiyor musunuz?")) return;
+  }
+
+  if (selectedDevice['UpcomingRez'] && selectedDevice['UpcomingRez'].length > 0) {
+       let nextRezStartStr = selectedDevice['UpcomingRez'][0].start, parts = nextRezStartStr.split(' '), tP = parts[0].split(':'), dP = parts[1].split('.'); 
+       let nextRezStart = new Date(dP[2], dP[1]-1, dP[0], tP[0], tP[1]);
+       if (rD > nextRezStart) return showCustomAlert("HATA: Başka bir rezervasyonla çakışıyor!", true);
+  }
+
+  document.getElementById('btnReserve').disabled = true;
+  let data = { code: selectedDevice['Demirbaş Kodu'], name: selectedDevice['Cihaz İsmi'], startDate: sD.getTime(), returnDate: rD.getTime(), project: document.getElementById('resProject').value, note: document.getElementById('resNote').value };
+
+  google.script.run.withSuccessHandler(m => { showCustomAlert(m, false); bootstrap.Modal.getOrCreateInstance(document.getElementById('actionModal')).hide(); fetchLabDataFromServer(); document.getElementById('btnReserve').disabled = false; })
+    .withFailureHandler(e => { showCustomAlert("HATA: " + (e.message||e), true); document.getElementById('btnReserve').disabled = false; })
+    .reserveDevice(data);
+}
+
+function returnDev() {
+  document.getElementById('btnReturn').disabled = true;
+  google.script.run.withSuccessHandler(m => { showCustomAlert(m, false); bootstrap.Modal.getOrCreateInstance(document.getElementById('actionModal')).hide(); fetchLabDataFromServer(); document.getElementById('btnReturn').disabled = false; })
+    .withFailureHandler(e => { showCustomAlert("HATA: " + (e.message||e), true); document.getElementById('btnReturn').disabled = false; })
+    .returnDevice(selectedDevice['Demirbaş Kodu'], document.getElementById('returnNote').value);
+}
+
+function transferDev() {
+  let tEmail = document.getElementById('transferEmail').value.trim();
+  if(!tEmail) return showCustomAlert("Devredilecek mail adresini girin!", true);
+  google.script.run.withSuccessHandler(m => { showCustomAlert(m, false); bootstrap.Modal.getOrCreateInstance(document.getElementById('actionModal')).hide(); fetchLabDataFromServer(); })
+    .withFailureHandler(e => showCustomAlert("HATA: " + (e.message||e), true)).initiateTransfer(selectedDevice['Demirbaş Kodu'], tEmail);
+}
+
+function reportFaultDev() { let note = prompt("Arıza veya kalibrasyon sebebini yazın. (DÖF Kaydı açılacaktır!)"); if(note) { bootstrap.Modal.getOrCreateInstance(document.getElementById('actionModal')).hide(); google.script.run.withSuccessHandler(m => { showCustomAlert(m); fetchLabDataFromServer(); }).reportFault(selectedDevice['Demirbaş Kodu'], note); } }
+
+function toggleCustomFolder() { document.getElementById('addFolderCustom').classList.toggle('d-none', document.getElementById('addFolderSelect').value !== "_OTHER_"); }
+
+function submitNewDevice() {
+  let c = document.getElementById('addCode').value.trim(), n = document.getElementById('addName').value.trim(), fV = document.getElementById('addFolderSelect').value, f = (fV === "_OTHER_") ? document.getElementById('addFolderCustom').value.trim() : fV;
+  if(!c || !n || !f) return showCustomAlert("HATA: Zorunlu alanları doldurun!", true);
+  google.script.run.withSuccessHandler(m => {showCustomAlert(m); fetchLabDataFromServer(); document.getElementById('addCode').value = ''; document.getElementById('addName').value = '';}).withFailureHandler(err => showCustomAlert("HATA: " + (err.message||err), true)).addNewDevice({code: c, name: n, folder: f, calDate: document.getElementById('addCal').value, brand: document.getElementById('addBrand').value.trim(), model: document.getElementById('addModel').value.trim(), serial: document.getElementById('addSerial').value.trim(), datasheet: document.getElementById('addDatasheet').value.trim(), cert: document.getElementById('addCert').value.trim()});
+}
+
+function submitAdminAssign() {
+  let c = document.getElementById('assignCode').value.trim(), e = document.getElementById('assignEmail').value.trim(), n = document.getElementById('assignNote').value.trim();
+  if(!c || !e) return showCustomAlert("HATA: Cihaz Kodu ve Personel Mail Adresi zorunludur!", true);
+  google.script.run.withSuccessHandler(m => { showCustomAlert(m, false); fetchLabDataFromServer(); document.getElementById('assignCode').value = ''; document.getElementById('assignEmail').value = ''; document.getElementById('assignNote').value = '';}).withFailureHandler(err => showCustomAlert("HATA: " + (err.message||err), true)).adminAssignDevice(c, e, n);
+}
+
+function submitCalibrationUpdate() {
+  let c = document.getElementById('calUpdateCode').value.trim(), d = document.getElementById('calUpdateDate').value;
+  if(!c || !d) return showCustomAlert("HATA: Cihaz kodu ve yeni tarih zorunludur!", true);
+  let formattedDate = d.split('-').reverse().join('.');
+  google.script.run.withSuccessHandler(m => {showCustomAlert(m); fetchLabDataFromServer(); document.getElementById('calUpdateCode').value = ''; document.getElementById('calUpdateDate').value = '';}).withFailureHandler(err => showCustomAlert("HATA: " + (err.message||err), true)).updateCalibration(c, formattedDate, currentUserEmail);
+}
+
+function submitStatusUpdate() {
+  let c = document.getElementById('statusDevCode').value.trim(); if(!c) return;
+  google.script.run.withSuccessHandler(m => {showCustomAlert(m); fetchLabDataFromServer(); document.getElementById('statusDevCode').value = ''; document.getElementById('arizaNoteInput').value = '';}).updateDeviceStatus(c, document.getElementById('statusSelect').value, document.getElementById('arizaNoteInput').value); 
+}
+
+function loadDeviceHistory() { 
+  document.getElementById('historyLoader').classList.remove('d-none'); 
+  google.script.run
+    .withSuccessHandler(data => { 
+      document.getElementById('historyLoader').classList.add('d-none'); 
+      data = data || [];
+      document.getElementById('historyTableBody').innerHTML = data.length > 0 
+        ? data.map(d => '<tr class="align-middle"><td><b class="text-dark">' + escapeHtml(d.code) + '</b></td><td>' + escapeHtml(d.name) + '</td><td><span class="text-secondary">' + escapeHtml(d.marka) + '</span></td><td><span class="text-secondary">' + escapeHtml(d.model) + '</span></td><td><span class="fw-semibold text-dark">' + escapeHtml(d.kisi) + '</span></td><td><span class="text-muted">' + escapeHtml(d.email) + '</span></td><td><span class="text-muted">' + escapeHtml(d.alis) + '</span></td><td><span class="text-muted">' + escapeHtml(d.tahmini) + '</span></td><td><span class="text-muted">' + escapeHtml(d.gercek) + '</span></td><td><span class="badge ' + (d.durum === 'Kullanımda' ? 'bg-primary' : 'bg-secondary') + '">' + escapeHtml(d.durum) + '</span></td><td><span class="text-muted">' + escapeHtml(d.not || '-') + '</span></td></tr>').join('') 
+        : '<tr><td colspan="11" class="text-center text-muted py-4">Geçmiş kaydı bulunamadı.</td></tr>'; 
+    })
+    .withFailureHandler(err => { document.getElementById('historyLoader').classList.add('d-none'); showCustomAlert("HATA: " + (err.message || err), true); })
+    .getDeviceHistory(document.getElementById('historySearchInput').value.trim()); 
+}
+
+function loadOutgoingTransfers() {
+  document.getElementById('outgoingLoader').classList.remove('d-none'); 
+  document.getElementById('outgoingTableBody').innerHTML = '';
+  google.script.run.withSuccessHandler(res => { 
+      document.getElementById('outgoingLoader').classList.add('d-none'); 
+      if(!res || res.length === 0) { 
+        document.getElementById('outgoingTableBody').innerHTML = '<tr><td colspan="4" class="text-center text-muted fw-bold py-4">Onay bekleyen dış transfer bulunmuyor. 🎉</td></tr>'; 
+        return; 
+      } 
+      document.getElementById('outgoingTableBody').innerHTML = res.map(r => '<tr class="align-middle"><td><b>' + escapeHtml(r.code) + '</b></td><td>' + escapeHtml(r.name) + '</td><td><span class="badge bg-primary px-2 py-1">' + escapeHtml(r.durum.split(':')[1] || r.durum) + '</span></td><td class="text-center"><button class="btn btn-outline-danger btn-sm fw-bold px-3 py-1 rounded-2" onclick="cancelOutgoingTransfer(\'' + r.code + '\')"><i class="bi bi-x-circle-fill me-1"></i> İptal Et / Geri Çek</button></td></tr>').join(''); 
+  }).withFailureHandler(e => {
+      document.getElementById('outgoingLoader').classList.add('d-none');
+      document.getElementById('outgoingTableBody').innerHTML = '<tr><td colspan="4" class="text-center text-danger fw-bold py-4">HATA: ' + (e.message || e) + '</td></tr>';
+  }).loadOutgoingTransfers();
+}
+
+function cancelOutgoingTransfer(code) {
+    if(!confirm("Bu transferi iptal ederseniz karşı tarafın onay ekranından silinecek ve cihaz tekrar envanterinize (Müsait) dönecektir. Onaylıyor musunuz?")) return;
+    google.script.run.withSuccessHandler(m => {
+        showCustomAlert(m, false); loadOutgoingTransfers(); fetchLabDataFromServer(); refreshAdminStats();
+    }).withFailureHandler(err => showCustomAlert("HATA: " + (err.message||err), true)).cancelOutgoingTransfer(code);
+}
+
+function loadPlannedReservations() {
+  document.getElementById('plannedLoader').classList.remove('d-none'); document.getElementById('plannedTableBody').innerHTML = '';
+  google.script.run.withSuccessHandler(res => { 
+      document.getElementById('plannedLoader').classList.add('d-none'); 
+      if(!res || res.length === 0) { document.getElementById('plannedTableBody').innerHTML = '<tr><td colspan="7" class="text-center text-muted fw-bold py-4">Şu an için planlanmış bir rezervasyon yoktur.</td></tr>'; return; }
+      document.getElementById('plannedTableBody').innerHTML = res.map(r => '<tr class="align-middle"><td><b>' + escapeHtml(r.code) + '</b></td><td>' + escapeHtml(r.name) + '</td><td>' + escapeHtml(r.user) + '</td><td><small class="text-muted">' + escapeHtml(r.email) + '</small></td><td>' + escapeHtml(r.start) + '</td><td>' + escapeHtml(r.end) + '</td><td class="text-center"><button class="btn btn-outline-danger btn-sm fw-bold px-3 py-1 rounded-2" onclick="cancelReservationFromAdmin(\'' + r.code + '\')"><i class="bi bi-x-circle-fill me-1"></i> İptal</button></td></tr>').join(''); 
+  }).withFailureHandler(e => { document.getElementById('plannedLoader').classList.add('d-none'); document.getElementById('plannedTableBody').innerHTML = '<tr><td colspan="7" class="text-center text-danger fw-bold py-4">HATA: ' + (e.message || e) + '</td></tr>'; }).getPlannedReservations();
+}
+
+function cancelReservationFromAdmin(code) {
+    if(!confirm("Bu cihazın üzerindeki açık rezervasyonu iptal etmek istediğinize emin misiniz?")) return;
+    google.script.run.withSuccessHandler(m => { showCustomAlert(m, false); loadPlannedReservations(); fetchLabDataFromServer(); }).withFailureHandler(e => showCustomAlert("HATA: " + (e.message||e), true)).cancelReservation(code);
+}
+
+function loadQuarantine() {
+  document.getElementById('qLoader').classList.remove('d-none'); document.getElementById('quarantineTableBody').innerHTML = '';
+  google.script.run.withSuccessHandler(res => { 
+      document.getElementById('qLoader').classList.add('d-none'); globalQuarantineList = res || [];
+      if(globalQuarantineList.length === 0) { document.getElementById('quarantineTableBody').innerHTML = '<tr><td colspan="4" class="text-center text-muted fw-bold py-4">Onay bekleyen işlem bulunmuyor. 🎉</td></tr>'; return; } 
+      document.getElementById('quarantineTableBody').innerHTML = globalQuarantineList.map(r => '<tr class="align-middle"><td><b>' + escapeHtml(r.code) + '</b></td><td>' + escapeHtml(r.name) + '</td><td><span class="badge bg-warning text-dark px-2 py-1">' + escapeHtml(r.durum) + '</span></td><td class="text-center"><button class="btn btn-primary btn-sm fw-bold px-3 py-1 rounded-2" onclick="openQuarantineReview(\'' + r.code + '\')"><i class="bi bi-search me-1"></i> İncele / İşlem Yap</button></td></tr>').join(''); 
+  }).withFailureHandler(e => { document.getElementById('qLoader').classList.add('d-none'); document.getElementById('quarantineTableBody').innerHTML = '<tr><td colspan="4" class="text-center text-danger fw-bold py-4">HATA: ' + (e.message || e) + '</td></tr>'; }).loadQuarantine();
+}
+
+function openQuarantineReview(code) {
+   let dev = globalQuarantineList.find(r => r.code === code); if(!dev) return;
+   document.getElementById('qRevCode').value = dev.code; document.getElementById('qRevName').value = dev.name; document.getElementById('qRevBrand').value = dev.brand || ""; document.getElementById('qRevModel').value = dev.model || ""; document.getElementById('qRevCal').value = dev.calDate || "";
+   document.getElementById('qRevUser').innerText = dev.contextUser || "Sistem / Yeni Kayıt"; document.getElementById('qRevAction').innerText = dev.contextAction || "-"; document.getElementById('qRevNote').innerText = dev.contextNote || "-";
+   document.getElementById('qRevContextBlock').classList.remove('d-none'); bootstrap.Modal.getOrCreateInstance(document.getElementById('quarantineReviewModal')).show();
+}
+
+function submitQuarantineApprove() {
+   let code = document.getElementById('qRevCode').value;
+   let updatedData = { name: document.getElementById('qRevName').value.trim(), brand: document.getElementById('qRevBrand').value.trim(), model: document.getElementById('qRevModel').value.trim(), calDate: document.getElementById('qRevCal').value };
+   bootstrap.Modal.getOrCreateInstance(document.getElementById('quarantineReviewModal')).hide();
+   google.script.run.withSuccessHandler(m => { showCustomAlert(m, false); loadQuarantine(); fetchLabDataFromServer(); refreshAdminStats(); }).withFailureHandler(e => showCustomAlert("HATA: " + (e.message||e), true)).approveQuarantine(code, updatedData);
+}
+
+function submitQuarantineReject() {
+   let code = document.getElementById('qRevCode').value; let reason = prompt("İptal / Reddetme sebebinizi yazın (İsteğe Bağlı):"); if(reason === null) return; 
+   bootstrap.Modal.getOrCreateInstance(document.getElementById('quarantineReviewModal')).hide();
+   google.script.run.withSuccessHandler(m => { showCustomAlert(m, false); loadQuarantine(); fetchLabDataFromServer(); refreshAdminStats(); }).withFailureHandler(e => showCustomAlert("HATA: " + (e.message||e), true)).rejectQuarantine(code, reason);
+}
+
+function loadCalibrationReport() {
+  document.getElementById('reportLoader').classList.remove('d-none'); document.getElementById('reportTableBody').innerHTML = '';
+  google.script.run.withSuccessHandler(res => { 
+      document.getElementById('reportLoader').classList.add('d-none'); 
+      globalCalData = res || [];
+      if(globalCalData.length === 0) { document.getElementById('reportTableBody').innerHTML = '<tr><td colspan="5" class="text-center text-muted fw-bold py-4">Süresi yaklaşan kalibrasyon bulunmuyor. 🎉</td></tr>'; return; }
+      
+      document.getElementById('reportTableBody').innerHTML = globalCalData.map(d => {
+          let sClass = d.diffDays < 0 ? 'bg-danger text-white' : (d.diffDays === 0 ? 'bg-danger text-white' : 'bg-warning text-dark');
+          let sText = d.diffDays < 0 ? 'Geçti (' + d.diffDays + ' Gün)' : (d.diffDays === 0 ? 'Bugün Doluyor' : 'Yaklaştı (' + d.diffDays + ' Gün)');
+          return '<tr class="align-middle"><td><b>' + escapeHtml(d.code) + '</b></td><td>' + escapeHtml(d.name) + '</td><td>' + escapeHtml(d.brand) + ' ' + escapeHtml(d.model) + '</td><td>' + escapeHtml(d.cal) + '</td><td class="text-center"><span class="badge ' + sClass + '">' + sText + '</span></td></tr>';
+      }).join('');
+  }).withFailureHandler(e => {
+      document.getElementById('reportLoader').classList.add('d-none');
+      document.getElementById('reportTableBody').innerHTML = '<tr><td colspan="5" class="text-center text-danger fw-bold py-4">HATA: ' + (e.message || e) + '</td></tr>';
+  }).getUpcomingCalsServer();
+}
+
+function exportCalReportPDF() {
+  if (!globalCalData || globalCalData.length === 0) return showCustomAlert("Yazdırılacak cihaz bulunmuyor.", false);
+  let pW = window.open('', '_blank', 'height=650,width=900');
+  let rowsHtml = globalCalData.map(d => {
+      let sClass = d.diffDays < 0 ? 'color:#c62828;' : (d.diffDays === 0 ? 'color:#c62828;' : 'color:#d97706;');
+      let sText = d.diffDays < 0 ? 'Süresi Geçti (' + d.diffDays + ' Gün)' : (d.diffDays === 0 ? 'Bugün Doluyor (0 Gün)' : 'Yaklaştı (' + d.diffDays + ' Gün Kaldı)');
+      return '<tr><td style="padding:10px; border:1px solid #ddd; font-weight:bold;">' + escapeHtml(d.code) + '</td><td style="padding:10px; border:1px solid #ddd;">' + escapeHtml(d.name) + '</td><td style="padding:10px; border:1px solid #ddd; text-align:center;">' + escapeHtml(d.brand) + ' ' + escapeHtml(d.model) + '</td><td style="padding:10px; border:1px solid #ddd; text-align:center;">' + escapeHtml(d.cal) + '</td><td style="padding:10px; border:1px solid #ddd; font-weight:bold; ' + sClass + ' text-align:center;">' + sText + '</td></tr>';
+  }).join('');
+  
+  let scriptOpen = '<scr' + 'ipt>'; let scriptClose = '</scr' + 'ipt>';
+  let scriptLogic = "function sP(){setTimeout(()=>window.print(), 350);} let img=document.getElementById('plog'); if(img.complete) sP(); else img.onload=sP;";
+  
+  let headHtml = `<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><title>Güç Elektroniği Kalibrasyon Raporu</title><style>body{font-family:sans-serif;padding:20px;background:#fff;} .hdr{width:100%;background:#212529;border-bottom:5px solid #f4c430;border-radius:8px;margin-bottom:25px;border-collapse:collapse;} .hdr td{padding:18px 20px;} table.dt{width:100%;border-collapse:collapse;margin-top:10px;font-size:12px;} table.dt th{background:#343a40;color:#fff;padding:10px;} table.dt tr:nth-child(even){background:#f8f9fa;} @media print{body{padding:0;} .hdr, th{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}</style></head><body>`;
+  let bodyHtml = `<table class="hdr"><tr><td style="width:45%;"><img id="plog" src="https://anova.com.tr/wp-content/uploads/2022/06/Anova_Logo_Beyaz_00.webp" style="height:50px;max-width:200px;" onerror="this.style.display='none';"></td><td style="width:55%;text-align:right;"><div style="font-size:16px;color:#e9ecef;margin-bottom:4px;">Güç Elektroniği Laboratuvarı</div><div style="font-size:13px;color:#f4c430;font-weight:bold;">Raporu Alan: ${currentUserEmail}</div></td></tr></table><div style="text-align:center;margin-bottom:20px;"><h3>Kalibrasyon Durum Raporu</h3><p style="margin-top:-10px;color:#666;">Laboratuvarınızdaki Kalibrasyon Süresi Yaklaşan Cihazlar Listesi</p></div><table style="width:100%;margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:8px;font-size:13px;"><tr><td><b>Rapor Tarihi:</b> ${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'})}</td><td style="text-align:right;"><b>Toplam Kritik Cihaz:</b> ${globalCalData.length} Adet</td></tr></table><table class="dt"><thead><tr><th>Demirbaş Kodu</th><th>Cihaz İsmi</th><th style="text-align:center;">Marka / Model</th><th style="text-align:center;">Son Kalibrasyon</th><th style="text-align:center;">Durum</th></tr></thead><tbody>${rowsHtml}</tbody></table><div style="margin-top:30px;font-size:11px;text-align:center;color:#adb5bd;">Bu belge Anova Lab Takip Sistemi üzerinden ${currentUserEmail} tarafından oluşturulmuştur.</div></body></html>`;
+  
+  pW.document.write(headHtml + bodyHtml + scriptOpen + scriptLogic + scriptClose); 
+  pW.document.close();
+}
+
+function loadAdminList() { 
+  document.getElementById('superAdminOverlay').classList.add('d-none'); document.getElementById('adminManageContent').style.filter = 'none'; document.getElementById('adminManageContent').style.pointerEvents = 'auto'; document.getElementById('adminTableBody').innerHTML = '<tr><td colspan="5" class="text-center py-4"><div class="spinner-border text-secondary"></div><div class="mt-2 text-muted small fw-bold">Yöneticiler Yükleniyor...</div></td></tr>';
+  google.script.run.withSuccessHandler(data => { 
+    if(!data || data.length === 0) { document.getElementById('adminTableBody').innerHTML = '<tr><td colspan="5" class="text-center text-muted py-4">Kayıt bulunamadı.</td></tr>'; return; }
+    document.getElementById('adminTableBody').innerHTML = data.map(d => {
+      let isSuper = d.role === "super"; let roleBadge = isSuper ? '<span class="badge bg-danger ms-2" style="font-size:0.7rem;">Süper Admin</span>' : '<span class="badge bg-secondary ms-2" style="font-size:0.7rem;">Yönetici</span>';
+      let superToggle = '<div class="form-check form-switch d-inline-block m-0"><input class="form-check-input" type="checkbox" style="cursor:pointer; transform: scale(1.2);" ' + (isSuper?'checked':'') + ' onchange="toggleSuper(\'' + d.email + '\', this.checked)"></div>';
+      let notifyToggle = '<div class="form-check form-switch d-inline-block m-0"><input class="form-check-input" type="checkbox" style="cursor:pointer; transform: scale(1.2);" ' + (d.notify?'checked':'') + ' onchange="toggleNotify(\'' + d.email + '\', this.checked)"></div>';
+      let actionBtn = '<button class="btn btn-sm btn-outline-danger fw-bold rounded-2 px-2 py-1" onclick="delAdmin(\'' + d.email + '\')" title="Yetkiyi Kaldır"><i class="bi bi-trash-fill me-1"></i> Sil</button>';
+      return '<tr class="align-middle"><td class="align-middle px-3"><div class="d-flex align-items-center"><i class="bi bi-person-circle fs-5 text-secondary me-2"></i><div><span class="fw-bold text-dark">' + escapeHtml(d.email) + '</span>' + roleBadge + '</div></div></td><td class="align-middle text-center"><code class="bg-light px-2 py-1 rounded border text-dark fw-bold">' + escapeHtml(d.password) + '</code></td><td class="align-middle text-center">' + superToggle + '</td><td class="align-middle text-center">' + notifyToggle + '</td><td class="align-middle text-center">' + actionBtn + '</td></tr>';
+    }).join(''); 
+  }).withFailureHandler(err => {
+     let errorMsg = err.message || err;
+     if(errorMsg.includes("Sadece kurucu görebilir") || errorMsg.includes("Yetkiniz yok")) { document.getElementById('adminTableBody').innerHTML = '<tr><td colspan="5" class="text-center text-muted py-4">Gizli Veri</td></tr>'; document.getElementById('adminManageContent').style.filter = 'blur(6px)'; document.getElementById('adminManageContent').style.pointerEvents = 'none'; document.getElementById('superAdminOverlay').classList.remove('d-none'); } 
+     else { document.getElementById('adminTableBody').innerHTML = '<tr><td colspan="5" class="text-center text-danger fw-bold py-4"><i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i><br>' + errorMsg + '</td></tr>'; }
+  }).getAdminList(); 
+}
+
+function loadStatistics() {
+    document.getElementById('statContentArea').classList.add('d-none'); document.getElementById('statLoader').classList.remove('d-none');
+    google.script.run.withSuccessHandler(res => { document.getElementById('statLoader').classList.add('d-none'); document.getElementById('statContentArea').classList.remove('d-none'); drawCharts(res);
+    }).withFailureHandler(e => { document.getElementById('statLoader').classList.add('d-none'); showCustomAlert("HATA: " + (e.message||e), true); }).getLabStatistics();
+}
+
+function drawCharts(data) {
+    if(devChartInstance) devChartInstance.destroy(); if(userChartInstance) userChartInstance.destroy();
+    const colors1 = ['#f4c430', '#212529', '#17a2b8', '#6c757d', '#20c997', '#fd7e14', '#0d6efd', '#d63384', '#6f42c1', '#adb5bd'];
+    const colors2 = ['#212529', '#f4c430', '#0dcaf0', '#495057', '#198754', '#ffc107', '#0a58ca', '#e83e8c', '#6610f2', '#ced4da'];
+
+    const devCtx = document.getElementById('deviceChart').getContext('2d');
+    devChartInstance = new Chart(devCtx, { type: 'doughnut', data: { labels: data.deviceStats.map(d => d.label), datasets: [{ data: data.deviceStats.map(d => d.count), backgroundColor: colors1, borderWidth: 3, borderColor: '#ffffff', hoverOffset: 6 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'right', labels: { boxWidth: 12, padding: 15, font: { family: 'Inter', size: 11 } } }, tooltip: { backgroundColor: 'rgba(33, 37, 41, 0.95)', titleFont: { family: 'Inter', size: 13 }, bodyFont: { family: 'Inter', size: 12 }, padding: 12, cornerRadius: 8 } } } });
+
+    const userCtx = document.getElementById('userChart').getContext('2d');
+    userChartInstance = new Chart(userCtx, { type: 'pie', data: { labels: data.userStats.map(d => d.label), datasets: [{ data: data.userStats.map(d => d.count), backgroundColor: colors2, borderWidth: 3, borderColor: '#ffffff', hoverOffset: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 12, padding: 15, font: { family: 'Inter', size: 11 } } }, tooltip: { backgroundColor: 'rgba(33, 37, 41, 0.95)', titleFont: { family: 'Inter', size: 13 }, bodyFont: { family: 'Inter', size: 12 }, padding: 12, cornerRadius: 8 } } } });
+}
+
+function toggleNotify(email, isChecked) { google.script.run.withFailureHandler(err => showCustomAlert("HATA: " + (err.message||err), true)).toggleAdminNotification(email, isChecked); }
+function toggleSuper(email, isChecked) { google.script.run.withFailureHandler(err => showCustomAlert("HATA: " + (err.message||err), true)).toggleSuperAdmin(email, isChecked); }
+function addNewAdmin() { let e = document.getElementById('newAdminEmail').value.trim(), p = document.getElementById('newAdminPass').value.trim(), isSuper = document.getElementById('newAdminSuper').checked; if(e&&p) google.script.run.withSuccessHandler(m => {showCustomAlert(m); loadAdminList(); document.getElementById('newAdminEmail').value=''; document.getElementById('newAdminPass').value=''; document.getElementById('newAdminSuper').checked=false; }).addOrUpdateAdmin(e, p, isSuper); }
+function delAdmin(email) { if(confirm("Silinsin mi?")) google.script.run.withSuccessHandler(m => {showCustomAlert(m); loadAdminList();}).removeAdmin(email); }
+
+function openBulkModal() {
+  multiDeviceCodes = [];
+  document.getElementById('multiCodeInput').value = ''; document.getElementById('bulkProject').value = ''; document.getElementById('bulkNote').value = '';
+  let now = new Date(); now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  document.getElementById('bulkStartDate').value = now.toISOString().slice(0, 16); document.getElementById('bulkReturnDate').value = ""; 
+  renderCodeList(); bootstrap.Modal.getOrCreateInstance(document.getElementById('bulkModal')).show();
+}
+
+function addCodeToList() { 
+  let input = document.getElementById('multiCodeInput'), val = input.value.trim(); 
+  if(val && !multiDeviceCodes.includes(val)) { google.script.run.withSuccessHandler(d => { multiDeviceCodes.push(d.code); renderCodeList(); input.value = ''; input.focus(); }).withFailureHandler(e => showCustomAlert("HATA: " + (e.message||e), true)).findDeviceForMulti(val); } else { input.focus(); }
+}
+
+function removeCodeFromList(code) { multiDeviceCodes = multiDeviceCodes.filter(c => c !== code); renderCodeList(); }
+
+function renderCodeList() {
+  let list = document.getElementById('multiCodeList');
+  if(multiDeviceCodes.length === 0) { list.innerHTML = '<li class="list-group-item bg-transparent text-muted small text-center py-4 border-0"><i class="bi bi-inbox fs-3 d-block mb-2"></i>Henüz cihaz kodu eklenmedi.</li>'; return; }
+  list.innerHTML = multiDeviceCodes.map(code => '<li class="list-group-item bg-white d-flex justify-content-between align-items-center rounded mb-1 shadow-sm border-0 py-2"><span class="fw-bold text-dark"><i class="bi bi-tag-fill me-2 text-secondary"></i>' + code + '</span><button class="btn btn-sm btn-link text-danger p-0" onclick="removeCodeFromList(\'' + code + '\')"><i class="bi bi-x-circle-fill fs-6"></i></button></li>').join('');
+}
+
+function submitBulkReserve() {
+  if(multiDeviceCodes.length === 0) return showCustomAlert("HATA: Lütfen en az bir cihaz kodu giriniz!", true);
+  let btn = document.getElementById('btnBulkSubmit'); btn.disabled = true;
+  let sDate = new Date(document.getElementById('bulkStartDate').value).getTime(), rDate = new Date(document.getElementById('bulkReturnDate').value).getTime();
+  let bulkData = { codes: multiDeviceCodes, startDate: sDate, returnDate: rDate, project: document.getElementById('bulkProject').value, note: document.getElementById('bulkNote').value };
+  google.script.run.withSuccessHandler(m => { btn.disabled = false; bootstrap.Modal.getOrCreateInstance(document.getElementById('bulkModal')).hide(); showCustomAlert(m, false); fetchLabDataFromServer(); }).withFailureHandler(e => { btn.disabled = false; showCustomAlert("HATA: " + (e.message||e), true); }).bulkReserveDevices(bulkData);
+}
+
+function openMyDevicesModal() {
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('myDevicesModal')).show(); 
+  document.getElementById('myDevicesLoader').classList.remove('d-none'); document.getElementById('multiReturnSection').classList.add('d-none'); document.getElementById('myDevicesList').innerHTML = ''; 
+  myUserDevicesList = []; document.getElementById('otherUserSearch').value = ''; google.script.run.withSuccessHandler(renderMyDevices).getUserDevices(null);
+}
+
+function searchUserDevices() { 
+  let q = document.getElementById('otherUserSearch').value.trim(); 
+  document.getElementById('myDevicesLoader').classList.remove('d-none'); document.getElementById('myDevicesList').innerHTML = ''; google.script.run.withSuccessHandler(renderMyDevices).withFailureHandler(e => showCustomAlert("HATA: " + (e.message||e), true)).getUserDevices(q); 
+}
+
+function renderMyDevices(devs) {
+  document.getElementById('myDevicesLoader').classList.add('d-none'); myUserDevicesList = devs || [];
+  if(myUserDevicesList.length === 0) { document.getElementById('multiReturnSection').classList.add('d-none'); document.getElementById('myDevicesList').innerHTML = '<div class="text-center py-4"><i class="bi bi-inbox text-muted" style="font-size: 3rem; opacity: 0.5;"></i><h6 class="mt-3 text-muted">Üzerinize kayıtlı veya planlı cihaz bulunamadı.</h6></div>'; return; }
+  
+  let activeCount = myUserDevicesList.filter(d => d.type === 'active').length;
+  document.getElementById('multiReturnSection').classList.toggle('d-none', activeCount === 0);
+
+  document.getElementById('myDevicesList').innerHTML = myUserDevicesList.map((d, i) => {
+    let delay = i * 0.05;
+    if (d.type === 'reservation') {
+      return '<li class="list-group-item d-flex justify-content-between align-items-center bg-white mb-2 shadow-sm border fade-in-up" style="animation-delay: ' + delay + 's; border-radius: 12px; border-left: 5px solid #ffc107 !important;"><div><span class="badge bg-warning text-dark mb-1">Planlı Rzv</span><br><strong class="text-dark">' + escapeHtml(d.code) + '</strong> - <span class="text-secondary fw-semibold">' + escapeHtml(d.name) + '</span><br><div class="mt-1" style="font-size: 0.8rem;"><span class="text-muted">Başlangıç: <b>' + escapeHtml(d.date) + '</b></span><br><span class="text-muted">Teslim: <b class="text-dark">' + escapeHtml(d.returnDate) + '</b></span>' + (d.note ? '<br><small class="text-secondary">Not: ' + escapeHtml(d.note) + '</small>' : '') + '</div></div><button class="btn btn-sm btn-outline-warning text-dark fw-bold px-3 py-2" onclick="cancelMyReservation(\'' + d.code + '\')">İptal</button></li>';
+    } else {
+      return '<li class="list-group-item d-flex justify-content-between align-items-center bg-white mb-2 shadow-sm border fade-in-up" style="animation-delay: ' + delay + 's; border-radius: 12px; border-left: 5px solid #dc3545 !important;"><div><span class="badge bg-danger mb-1">Şu An Kullanımda</span><br><strong class="text-dark">' + escapeHtml(d.code) + '</strong> - <span class="text-secondary fw-semibold">' + escapeHtml(d.name) + '</span><br><div class="mt-1" style="font-size: 0.8rem;"><span class="text-muted">Alış: <b>' + escapeHtml(d.date) + '</b></span><br><span class="text-muted">Teslim: <b class="text-danger">' + escapeHtml(d.returnDate) + '</b></span></div></div><button class="btn btn-sm btn-outline-danger fw-bold px-3 py-2" onclick="returnSingleFromList(\'' + d.code + '\')">İade Et</button></li>';
+    }
+  }).join('');
+}
+
+function cancelMyReservation(code) { if(!confirm("Rezervasyon iptal edilsin mi?")) return; google.script.run.withSuccessHandler(m => { showCustomAlert(m, false); openMyDevicesModal(); fetchLabDataFromServer(); }).withFailureHandler(e => showCustomAlert("HATA: " + (e.message||e), true)).cancelReservation(code); }
+function bulkReturnMyDevices() {
+  let activeCodes = myUserDevicesList.filter(d => d.type === 'active').map(d => d.code);
+  if (activeCodes.length === 0) return;
+  if (!confirm("Kullanımdaki tüm cihazları iade etmek istediğinize emin misiniz?")) return;
+  let btn = document.getElementById('btnReturnAll'); btn.disabled = true; 
+  google.script.run.withSuccessHandler(m => { btn.disabled = false; showCustomAlert(m, false); openMyDevicesModal(); fetchLabDataFromServer(); }).withFailureHandler(e => { btn.disabled = false; showCustomAlert("HATA: " + (e.message||e), true); }).bulkReturnDevices(activeCodes, document.getElementById('multiReturnNote').value);
+}
+function returnSingleFromList(code) { google.script.run.withSuccessHandler(m => { showCustomAlert(m); openMyDevicesModal(); fetchLabDataFromServer(); }).returnDevice(code, ""); }
+
+setInterval(() => { fetchLabDataFromServer(); }, 900000);
+</script>
+</body>
+</html>
